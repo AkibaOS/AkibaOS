@@ -11,6 +11,16 @@
       {
         "html-has-lang": "off"
       }
+    ],
+    "no-inline-styles": "off",
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "scrollbar-width",
+          "scrollbar-width: none"
+        ]
+      }
     ]
   }
 }
