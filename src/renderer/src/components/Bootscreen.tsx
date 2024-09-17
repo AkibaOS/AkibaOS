@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import PropTypes from 'prop-types'
 import '../assets/css/boot.css'
+
+interface BootScreenProps {
+  onBootComplete: () => void
+}
 
 enum BootStatus {
   OK = 'ok',
@@ -88,7 +93,7 @@ const BOOT_MESSAGES: BootMessage[] = [
   {
     message: 'Memory Test: 16384K',
     status: BootStatus.OK,
-    delay: randomDelay(4000, 8000),
+    delay: randomDelay(3000, 5000),
     failChance: 0,
     retryCount: 0
   },
@@ -759,7 +764,7 @@ const BOOT_MESSAGES: BootMessage[] = [
   }
 ]
 
-const BootScreen: React.FC = () => {
+const BootScreen: React.FC<BootScreenProps> = ({ onBootComplete }) => {
   const [displayedLines, setDisplayedLines] = useState<BootMessage[]>([])
   const [currentLineIndex, setCurrentLineIndex] = useState(0)
   const [cursorVisible, setCursorVisible] = useState(true)
@@ -907,9 +912,12 @@ const BootScreen: React.FC = () => {
       }
     } else if (currentLineIndex === BOOT_MESSAGES.length && !bootComplete) {
       setBootComplete(true)
+      setTimeout(() => {
+        onBootComplete()
+      }, 100)
     }
     return undefined
-  }, [currentLineIndex, bootComplete, processLine])
+  }, [currentLineIndex, bootComplete, processLine, onBootComplete])
 
   const getStatusClass = (status: BootStatus): string => {
     switch (status) {
@@ -955,6 +963,10 @@ const BootScreen: React.FC = () => {
       </div>
     </div>
   )
+}
+
+BootScreen.propTypes = {
+  onBootComplete: PropTypes.func.isRequired
 }
 
 export default BootScreen
